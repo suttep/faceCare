@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Account Configuration
+{% endblock %}
+
+{% block main %}
+<div class="container-form">
+    <div class="alert alert-warning alert-register" role="alert" id="alert">
+        <div class="d-flex">
+            <div class="alert-text" id="alert-text"></div>
+            <button onclick="closeAlert()" type="button" class="btn-close alert-close" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="alert alert-success alert-register" role="alert" id="success">
+        <div class="d-flex">
+            <div class="alert-text" id="success-text"></div>
+            <button onclick="closeSuccess()" type="button" class="btn-close alert-close" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="form-card-login">
+        <div class="head-form">Account</div>
+        <form id="account-form">
+            <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <label id="error-email" class="error-register"></label>
+            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" value="{{user['email']}}" required>
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+            <label class="form-label">Name</label>
+            <label id="error-name" class="error-register"></label>
+            <input type="text" class="form-control width-full" id="name" name="name" value="{{user['name']}}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Skin Type</label>
+                <label id="error-skintype" class="error-register"></label>
+                <select class="form-select" id="skinType" name="skinType" required>
+                    <option disabled>Skin Type</option>
+                    {% if facecondition['skinType'] == 1 %}
+                    <option value="1" selected>Normal</option>
+                    {% else %}
+                    <option value="1">Normal</option>
+                    {% endif %}
+                    {% if facecondition['skinType'] == 2 %}
+                    <option value="2" selected>Dry</option>
+                    {% else %}
+                    <option value="2">Dry</option>
+                    {% endif %}
+                    {% if facecondition['skinType'] == 3 %}
+                    <option value="3" selected>Oily</option>
+                    {% else %}
+                    <option value="3">Oily</option>
+                    {% endif %}
+                    {% if facecondition['skinType'] == 4 %}
+                    <option value="4" selected>Combination</option>
+                    {% else %}
+                    <option value="4">Combination</option>
+                    {% endif %}
+                </select>
+                <a class="label-referer" href="https://www.eucerin.co.uk/about-skin/basic-skin-knowledge/skin-types" target="_blank">Click here on how to know your skin type</a>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Do you have acne?</label>
+                <label id="error-acne" class="error-register"></label>
+                <div class="form-check">
+                    {% if facecondition['acneCondition'] == 1 %}
+                    <input class="form-check-input" type="radio" name="acne" id="acne-yes" value="1" onclick="acneCheck()" checked>
+                    {% else %}
+                    <input class="form-check-input" type="radio" name="acne" id="acne-yes" value="1" onclick="acneCheck()">
+                    {% endif %}
+                    <label class="form-check-label" for="exampleRadios1">
+                        Yes
+                    </label>
+                </div>
+                <div class="form-check">
+                    {% if facecondition['acneCondition'] == 2 %}
+                    <input class="form-check-input" type="radio" name="acne" id="acne-no" value="2" onclick="acneCheck()" checked>
+                    {% else %}
+                    <input class="form-check-input" type="radio" name="acne" id="acne-no" value="2" onclick="acneCheck()">
+                    {% endif %}
+                    <label class="form-check-label" for="exampleRadios2">
+                        No
+                    </label>
+                </div>
+            </div>
+            <div class="mb-3 acne-selector" id="acne-selector">
+                <label class="form-label">Select Acne Type</label>
+                <select class="form-select" name="acneType">
+                    <option disabled >Acne Type</option>
+                    {% if facecondition['acneType'] == 1 %}
+                    <option value="1" selected>Whiteheads</option>
+                    {% else %}
+                    <option value="1">Whiteheads</option>
+                    {% endif %}
+                    {% if facecondition['acneType'] == 2 %}
+                    <option value="2" selected>Blackheads</option>
+                    {% else %}
+                    <option value="2">Blackheads</option>
+                    {% endif %}
+                    {% if facecondition['acneType'] == 3 %}
+                    <option value="3" selected>Pustules</option>
+                    {% else %}
+                    <option value="3">Pustules</option>
+                    {% endif %}
+                    {% if facecondition['acneType'] == 4 %}
+                    <option value="4" selected>Papules</option>
+                    {% else %}
+                    <option value="4">Papules</option>
+                    {% endif %}
+                    {% if facecondition['acneType'] == 5 %}
+                    <option value="5" selected>Cysts</option>
+                    {% else %}
+                    <option value="5">Cysts</option>
+                    {% endif %}
+                    {% if facecondition['acneType'] == 6 %}
+                    <option value="6" selected>Nodules</option>
+                    {% else %}
+                    <option value="6">Nodules</option>
+                    {% endif %}
+                </select>
+                <a class="label-referer" href="https://skinkraft.com/blogs/articles/types-of-acne-how-to-treat-them" target="_blank">Click here on how to know your acne type</a>
+            </div>
+            <button class="btn tbl-pink" type="button" onclick="submitter()" id="editAccountButton">Save Configuration</button>
+        </form>
+    </div>
+</div>
+
+<script>
+window.onload = function () {
+    acneCheck();
+};
+function acneCheck() {
+    if (document.getElementById("acne-yes").checked) {
+        document.getElementById("acne-selector").style.display = "block";
+    } else {
+        document.getElementById("acne-selector").style.display = "none";
+    }
+}
+function checkName(){
+    var name = document.getElementById("name").value
+    if(name.length < 1) {
+        document.getElementById("error-name").innerHTML = "* Please enter a valid name";
+        document.getElementById("error-name").style.display = "block";
+        document.getElementById("name").focus();
+        document.getElementById("editAccountButton").disabled = false;
+        return false;
+    } else {
+        document.getElementById("error-name").style.display = "none";
+        return true;
+    }
+}
+function checkEmail() {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!document.getElementById("email").value.match(mailformat)) {
+        document.getElementById("error-email").innerHTML = "* Please enter valid email";
+        document.getElementById("error-email").style.display = "block";
+        document.getElementById("email").focus();
+        document.getElementById("editAccountButton").disabled = false;
+        return false;
+    } else {
+        document.getElementById("error-email").style.display = "none";
+        return true;
+    }
+}
+
+
+function checkAcne() {
+    if(!document.getElementById("acne-yes").checked && !document.getElementById("acne-no").checked) {
+        document.getElementById("error-acne").innerHTML = "* Please select one condition";
+        document.getElementById("error-acne").style.display = "block";
+        document.getElementById("error-acne").focus();
+        document.getElementById("editAccountButton").disabled = false;
+        return false;
+    } else {
+        document.getElementById("error-acne").style.display = "none";
+        return true;
+    }
+}
+
+function validator(){
+    var checker = 0
+    if (!checkAcne()) {
+        checker = checker + 1;
+    }
+    if (!checkEmail()) {
+        checker = checker + 1;
+    }
+    if (!checkName()) {
+        checker = checker + 1;
+    }
+    return checker;
+}
+function closeAlert(){
+    document.getElementById("alert").style.display = "none";
+}
+function closeSuccess(){
+    document.getElementById("success").style.display = "none";
+}
+
+function errorChecker(status, desc){
+    document.getElementById("alert").style.display = "block";
+    document.getElementById("alert-text").innerHTML = desc;
+}
+
+function submitter(){
+    event.preventDefault();
+    document.getElementById("editAccountButton").disabled = true;
+    if (validator() == 0){
+        formData = new FormData(document.getElementById("account-form"));
+        fetch(`/input-account`, {
+            method: "POST",
+            body: formData,
+            }).then((response) => response.json())
+            .then((data) => {
+                if (data.status == "success") {
+                    window.location.assign(`/account`)
+                    document.getElementById("success").style.display = "block";
+                    document.getElementById("success-text").innerHTML = data.desc;
+                } else {
+                    errorChecker(data.status, data.desc)
+                    document.getElementById("editAccountButton").disabled = false;
+                }
+            })
+    }
+}
+</script>
+{% endblock %}

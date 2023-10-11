@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Skincare Guide
+{% endblock %}
+
+{% block main %}
+<div class="container-form">
+    <div class="head-form mb-3 fs-2">Here is your skincare recommendation</div>
+
+    <div class="head-form mt-5 fs-3">Morning Routine</div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Facial Wash</div>
+        <div class="description-skincare ps-3 mb-3">Look for facial wash that cleanse gently. don't invest much on the extra ingredient. Invest the extra ingredient on serums or moisturizer.</div>
+    </div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Vitamin C</div>
+        <div class="description-skincare ps-3 mb-3">Look for vitamin C (L-Ascorbic Acid) that also has vitamin E and Ferulic Acid. But the important ingredient is the vitamin C itself.</div>
+    </div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Moisturizer</div>
+        <div class="description-skincare ps-3 mb-3">In the morning you can use Moisturizer that also has SPF 30+ or above. But if buy moisturizer that have SPF 30+ in it, you can't use it at night. So you have to buy 2 different moisturizer. look for hydrating ingredient and ceramide.</div>
+    </div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Sunscreen</div>
+        <div class="description-skincare ps-3 mb-3">Look for SPF30+ or above, also look for the rating of the sunscreen. Look sunscreen that protects from UVA and UVB. Usually if the sunscreen is good, they have "Broad Spectrum" rating or "PA+++" or above rating.</div>
+    </div>
+
+    <div class="head-form mt-5 fs-3">Night Routine</div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Facial Wash</div>
+        <div class="description-skincare ps-3 mb-3">Look for facial wash that cleanse gently. don't invest much on the extra ingredient. Invest the extra ingredient on serums or moisturizer.</div>
+    </div>
+    {% if skinType == 2 %}
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Exfoliant</div>
+        <div class="description-skincare ps-3 mb-3">Look for "Lactic Acid" in the ingredient. Don't buy exfoliant that uses Scrub. AHA & BHA exfoliant also helps. Try to look ingredient that also hydrate your face.</div>
+    </div>
+    {% else %}
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Exfoliant</div>
+        <div class="description-skincare ps-3 mb-3">Look for AHA BHA exfoliant. Don't buy exfoliant that uses Scrub. Salicylic acid also helps with your skin condition.</div>
+    </div>
+    {% endif %}
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Serums</div>
+        <div class="sub-head-skincare ps-3 fs-5">Niacinamide</div>
+        <div class="sub-description-skincare ps-5 mb-2">Look for low percentage Niacinamide. 5% Niacinamide is already good and beneficial to your skin. Higher dose can damage your skin if your skin never interact with Niacinamide before.</div>
+        <div class="sub-head-skincare ps-3 fs-5">Retinol</div>
+        <div class="sub-description-skincare ps-5 mb-2">If you are under 18, pregnant or nursing don't use this, see retinol alternative. For a beginner we recommend look for low dose retinol first because if you use advanced retinol it can damage your skin. We recommend to layer your retinol. First use moisturizer, then retinol, then moisturizer again.</div>
+        <div class="sub-head-skincare ps-3 fs-5">Retinol Alternative</div>
+        <div class="sub-description-skincare ps-5 mb-2">A good alternative for retinol is Bakuchiol. It has almost the same benefit for retinol and most bakuchiol is vegan.</div>
+    </div>
+    <div class="repeat-skincare">
+        <div class="head-skincare mb-1 fs-4">Moisturizer</div>
+        <div class="description-skincare ps-3 mb-3">If your morning moisturizer does not contain sunscreen (SPF). then you can use your morning moisturizer. Else, if your morning moisturizer contain sunscreen. You need to buy another moisturizer. Look for hydrating ingredient and ceramide.</div>
+    </div>
+
+    {% if acneType == 1 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Whiteheads</div>
+        <div class="description-skincare ps-3 mb-3">Look for Salicylic Acid for the exfoliant. Routinly using exfoliant and retinol will drasticly decrease whiteheads.</div>
+    </div>
+    {% elif acneType == 2 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Blackheads</div>
+        <div class="description-skincare ps-3 mb-3">Look for Salicylic Acid for the exfoliant. Routinly using exfoliant and retinol will drasticly decrease blackheads.</div>
+    </div>
+    {% elif acneType == 3 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Pustules</div>
+        <div class="description-skincare ps-3 mb-3">Look for Salicylic Acid Acne Spot. Careful when using skincare, try to avoid Pustules area. After few 2-3 weeks if problem still occur, consult a dermatologist.</div>
+    </div>
+    {% elif acneType == 4 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Papules</div>
+        <div class="description-skincare ps-3 mb-3">Look for Salicylic Acid Acne Spot. Careful when using skincare, try to avoid Papules area. After few 2-3 weeks if problem still occur, consult a dermatologist.</div>
+    </div>
+    {% elif acneType == 5 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Cysts</div>
+        <div class="description-skincare ps-3 mb-3">Most over-the-counter skincare doesn't really helps. We recommend you to consult a dermatologist. Avoid touching acnes.</div>
+    </div>
+    {% elif acneType == 6 %}
+    <div class="head-form mt-5 fs-3">Acne Routine</div>
+    <div class="repeat-acne">
+        <div class="head-skincare mb-1 fs-4">Nodules</div>
+        <div class="description-skincare ps-3 mb-3">Most over-the-counter skincare doesn't really helps. We recommend you to consult a dermatologist. Avoid touching acnes.</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

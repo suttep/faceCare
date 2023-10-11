@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Skincare Guide
+{% endblock %}
+
+{% block main %}
+<div class="container-form">
+    <div class="alert alert-warning alert-register" role="alert" id="alert">
+        <div class="d-flex">
+            <div class="alert-text" id="alert-text"></div>
+            <button onclick="closeAlert()" type="button" class="btn-close alert-close" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="head-form">Generate Skincare</div>
+    <form id="register-form">
+        <div class="mb-3">
+            <label class="form-label">Are you aged 18 or over?</label>
+            <label id="error-acne" class="error-register"></label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="age" id="age-yes" value="1" onclick="ageCheck()">
+                <label class="form-check-label" for="exampleRadios1">
+                    Yes
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="age" id="age-no" value="2" onclick="age()">
+                <label class="form-check-label" for="exampleRadios2">
+                    No
+                </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Are you currently pregnant or nursing?</label>
+            <label id="error-acne" class="error-register"></label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="pregnant" id="pregnant-yes" value="1" onclick="pregnantCheck()">
+                <label class="form-check-label" for="exampleRadios1">
+                    Yes
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="pregnant" id="pregnant-no" value="2" onclick="pregnantCheck()">
+                <label class="form-check-label" for="exampleRadios2">
+                    No
+                </label>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="submitter()">Submit</button>
+      </form>
+</div>
+
+<script>
+function acneCheck() {
+    if (document.getElementById("acne-yes").checked) {
+        document.getElementById("acne-selector").style.display = "block";
+    } else {
+        document.getElementById("acne-selector").style.display = "none";
+    }
+}
+function checkName(){
+    var name = document.getElementById("name").value
+    if(name.length < 8) {
+        document.getElementById("error-name").innerHTML = "* Please enter a valid name";
+        document.getElementById("error-name").style.display = "block";
+        document.getElementById("name").focus();
+        return false;
+    } else {
+        return true;
+    }
+}
+function checkEmail() {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!document.getElementById("email").value.match(mailformat)) {
+        document.getElementById("error-email").innerHTML = "* Please enter valid email";
+        document.getElementById("error-email").style.display = "block";
+        document.getElementById("email").focus();
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkPassword() {
+    var password = document.getElementById("password").value
+    if(password.length < 8) {
+        document.getElementById("error-password").innerHTML = "* Password must be atleast 8 characters";
+        document.getElementById("error-password").style.display = "block";
+        document.getElementById("password").focus();
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkAcne() {
+    if(!document.getElementById("acne-yes").checked && !document.getElementById("acne-no").checked) {
+        document.getElementById("error-acne").innerHTML = "* Please select one condition";
+        document.getElementById("error-acne").style.display = "block";
+        document.getElementById("error-acne").focus();
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function validator(){
+    var checker = 0
+    if (!checkAcne()) {
+        checker = checker + 1;
+    }
+    if (!checkPassword()) {
+        checker = checker + 1;
+    }
+    if (!checkEmail()) {
+        checker = checker + 1;
+    }
+    if (!checkName()) {
+        checker = checker + 1;
+    }
+    console.log(checker);
+    return checker;
+}
+function closeAlert(){
+    document.getElementById("alert").style.display = "none";
+}
+
+function errorChecker(status, desc){
+    document.getElementById("alert").style.display = "block";
+    document.getElementById("alert-text").innerHTML = desc;
+}
+
+function submitter(){
+    event.preventDefault();
+    if (validator() == 0){
+        formData = new FormData(document.getElementById("register-form"));
+        fetch(`/input-register`, {
+            method: "POST",
+            body: formData,
+            }).then((response) => response.json())
+            .then((data) => {
+                if (data.status == "success") {
+                    window.location.assign(`/`)
+                } else {
+                    errorChecker(data.status, data.desc)
+                }
+            })
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Hello!
+{% endblock %}
+
+{% block main %}
+<div class="container">
+  <div class="alert alert-danger alert-register" role="alert" id="alert">
+      <div class="d-flex">
+          <div class="alert-text" id="alert-text"></div>
+          <button onclick="closeAlert()" type="button" class="btn-close alert-close" aria-label="Close"></button>
+      </div>
+  </div>
+  <div class="alert alert-success alert-register" role="alert" id="success">
+      <div class="d-flex">
+          <div class="alert-text" id="success-text"></div>
+          <button onclick="closeSuccess()" type="button" class="btn-close alert-close" aria-label="Close"></button>
+      </div>
+  </div>
+  <div class="text-secondary fs-5">Hello {{ username }}, this is your {{ streak }} day.</div>
+  <div class="media-scroller snaps-inline mx-auto w-50">
+    {% for earlierDay in earlierDays %}
+    {% if earlierDay['logged'] == 1 and earlierDay['today'] %}
+    <div class="index-card index-card-logged" id="today">
+      <div class="index-card-date" >{{ earlierDay['date']}}</div>
+      <div class="index-card-routine">{{ earlierDay['routine']}}</div>
+    </div>
+    {% elif earlierDay['logged'] == 1  %}
+    <div class="index-card index-card-logged">
+      <div class="index-card-date">{{ earlierDay['date']}}</div>
+      <div class="index-card-routine">{{ earlierDay['routine']}}</div>
+    </div>
+    {% elif earlierDay['today'] == 1  %}
+    <div class="index-card" id="today">
+      <div class="index-card-date">{{ earlierDay['date']}}</div>
+      <div class="index-card-routine">{{ earlierDay['routine']}}</div>
+    </div>
+    {% else %}
+    <div class="index-card">
+      <div class="index-card-date">{{ earlierDay['date']}}</div>
+      <div class="index-card-routine">{{ earlierDay['routine']}}</div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+      <div class="d-flex w-100 mt-4">
+        {% if logger == 1 %}
+        <button class="btn tbl-pink mx-auto" type="button" onclick="logToday()" id="logTodayButton" disabled>You already logged today</button>
+        {% else %}
+        <button class="btn tbl-pink mx-auto" type="button" onclick="logToday()" id="logTodayButton">Log Today</button>
+        {% endif %}
+      </div>
+      <div class="d-flex w-75 mx-auto text-start">
+        <div class="ms-0 me-auto pe-5">
+            <div class="head-form mt-5 fs-4">Morning Routine</div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Facial Wash</div>
+                <div class="description-skincare ps-3 mb-3">Wash your face and then let it dry naturally / taps using face towel or face tissue. Avoid using same towel for body.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Vitamin C</div>
+                <div class="description-skincare ps-3 mb-3">After dry use vitamin c serum as instructed in the product.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Moisturizer</div>
+                <div class="description-skincare ps-3 mb-3">Use moisturizer as instructed in the product. If you use moisturizer that has SPF30+ you can skip sunscreen. </div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Sunscreen</div>
+                <div class="description-skincare ps-3 mb-3">You can use middle finger and ring finger to calculate how much sunscreen you need.</div>
+            </div>
+        </div>
+        <div class="ms-auto me-0 ps-5">
+            <div class="head-form mt-5 fs-4">Night Routine</div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Facial Wash</div>
+                <div class="description-skincare ps-3 mb-3">Wash your face and then let it dry naturally / taps using face towel or face tissue. Avoid using same towel for body.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Exfoliant</div>
+                <div class="description-skincare ps-3 mb-3">Use exfoliant as instructed in the product. Some exfoliant need to be washed after 10/15 minutes. Some are let dry.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Serums</div>
+                <div class="description-skincare ps-3 mb-3">Use Niacinamide first, wait until dry. Then use Retinol or Bakuchiol.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Acne Spot</div>
+                <div class="description-skincare ps-3 mb-3">If it water based / lighter than your moisturizer, use after exfoliant dry. If it thicker than your moisturizer, use after moisturizer.</div>
+            </div>
+            <div class="repeat-skincare">
+                <div class="head-skincare mb-1 fs-5">Moisturizer</div>
+                <div class="description-skincare ps-3 mb-3">Let serum dry naturally and then moisture your face.</div>
+            </div>
+        </div>
+      </div>
+</div>
+<script>
+function closeAlert(){
+    document.getElementById("alert").style.display = "none";
+}
+function closeSuccess(){
+    document.getElementById("success").style.display = "none";
+}
+
+function logToday(){
+  document.getElementById("logTodayButton").disabled = true;
+  fetch(`/log_today`, {
+    method: "POST"
+    }).then((response) => response.json())
+    .then((data) => {
+        if (data.status == "success") {
+            document.getElementById("success").style.display = "block";
+            document.getElementById("success-text").innerHTML = data.desc;
+            document.getElementById("today").className = "index-card index-card-logged border border-dark";
+        } else {
+            document.getElementById("alert").style.display = "block";
+            document.getElementById("alert-text").innerHTML = data.desc;
+        }
+    })
+}
+
+window.onload = function () {
+  document.getElementById("today").scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+  document.getElementById("today").className += " border border-dark";
+};
+</script>
+{% endblock %}
