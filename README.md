@@ -1,5 +1,11 @@
 # FaceCare a Skin Cycling Planner
+
+![image](https://github.com/suttep/faceCare/assets/82015321/cc69f09e-d03a-47cb-bd14-9330a391e543)
+![image](https://github.com/suttep/faceCare/assets/82015321/8cec5596-9a01-4b06-acdc-42f2fd3ff5c3)
+![image](https://github.com/suttep/faceCare/assets/82015321/86b88b3a-ba97-4f5c-bf03-f07a785b1365)
+
 #### Video Demo:  https://www.youtube.com/watch?v=g8pIo9McEuU
+
 #### Description:
 FaceCare is an application inspired by the rising topic of skin cycling in social media. Many people still doesn't know how to do skin cycling correct. This application will help people plan and track skin cycling routines based on their skin condition. FaceCare will help its user by generating a skincare buying guide and plan a personalized skin cycling routine. User also able to modify their skin cycling routines and maybe if their skin condition changed, they able to modify their skin condition and generate new skin cycle plan.
 
