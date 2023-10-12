@@ -54,11 +54,11 @@ def index():
         getRoutine  = cursorRoutine.fetchall()
         skincycleLabel = []
         for x in getRoutine:
-            skincycleLabel.append(x["skincareLabel"])
+            skincycleLabel.append(x[1])
 
         cursorUser = con.execute("SELECT * FROM skincareLog WHERE user_id = ?", (session["user_id"],))
         getUser  = cursorUser.fetchall()
-        skincareStart = datetime.strptime(getUser[0]["skincareDateStart"], '%Y-%m-%d')
+        skincareStart = datetime.strptime(getUser[0][2], '%Y-%m-%d')
 
         if skincareStart >= earlierDate:
             userDay = earlierDate - skincareStart
@@ -80,7 +80,7 @@ def index():
             if dateForLog == getThisDay:
                 today = 1
             for arr in getLogged:
-                if dateForLog == arr['routineDate']:
+                if dateForLog == arr[0]:
                     logged = 1
 
             routines = (dayLog + count) % 4
@@ -108,15 +108,15 @@ def index():
 
         cursorUsername = con.execute("SELECT name FROM users WHERE user_id = ?", (session["user_id"],))
         getUsername = cursorUsername.fetchall()
-        username = getUsername[0]["name"]
+        username = getUsername[0][0]
 
-        if getUser[0]["dayLog"] == 0:
+        if getUser[0][1] == 0:
             streak = "first"
         else:
-            if getUser[0]["dayLog"] == 1:
+            if getUser[0][1] == 1:
                 streak = "first"
             else:
-                streak = getUser[0]["dayLog"]
+                streak = getUser[0][1]
         
         cursorLogger = con.execute("SELECT * FROM routineLog WHERE user_id = ? AND routineDate = ?", (session["user_id"], getThisDay))
         getLogger = cursorLogger.fetchall()
@@ -156,45 +156,45 @@ def skincycle():
     mday4 = []
     nday4 = []
     for x in getSkincycle:
-        if x["skinCycle"] == 1 and x["skincareTime"] == 1 and skincycleLength[0] == 0:
+        if x[1] == 1 and x[2] == 1 and skincycleLength[0] == 0:
             skincycleLength[0] += 1
-            mday1.append(x["skincareName"])
-            routineName.append(x["skincareLabel"])
-        elif x["skinCycle"] == 1 and x["skincareTime"] == 1:
-            mday1.append(x["skincareName"])
+            mday1.append(x[5])
+            routineName.append(x[4])
+        elif x[1] == 1 and x[2] == 1:
+            mday1.append(x[5])
             skincycleLength[0] += 1
-        elif x["skinCycle"] == 1 and x["skincareTime"] == 2:
-            nday1.append(x["skincareName"])
+        elif x[1] == 1 and x[2] == 2:
+            nday1.append(x[5])
             skincycleLength[1] += 1
-        elif x["skinCycle"] == 2 and x["skincareTime"] == 1 and skincycleLength[2] == 0:
+        elif x[1] == 2 and x[2] == 1 and skincycleLength[2] == 0:
             skincycleLength[2] += 1
-            mday2.append(x["skincareName"])
-            routineName.append(x["skincareLabel"])
-        elif x["skinCycle"] == 2 and x["skincareTime"] == 1:
-            mday2.append(x["skincareName"])
+            mday2.append(x[5])
+            routineName.append(x[4])
+        elif x[1] == 2 and x[2] == 1:
+            mday2.append(x[5])
             skincycleLength[2] += 1
-        elif x["skinCycle"] == 2 and x["skincareTime"] == 2:
-            nday2.append(x["skincareName"])
+        elif x[1] == 2 and x[2] == 2:
+            nday2.append(x[5])
             skincycleLength[3] += 1
-        elif x["skinCycle"] == 3 and x["skincareTime"] == 1 and skincycleLength[4] == 0:
+        elif x[1] == 3 and x[2] == 1 and skincycleLength[4] == 0:
             skincycleLength[4] += 1
-            mday3.append(x["skincareName"])
-            routineName.append(x["skincareLabel"])
-        elif x["skinCycle"] == 3 and x["skincareTime"] == 1:
-            mday3.append(x["skincareName"])
+            mday3.append(x[5])
+            routineName.append(x[4])
+        elif x[1] == 3 and x[2] == 1:
+            mday3.append(x[5])
             skincycleLength[4] += 1
-        elif x["skinCycle"] == 3 and x["skincareTime"] == 2:
-            nday3.append(x["skincareName"])
+        elif x[1] == 3 and x[2] == 2:
+            nday3.append(x[5])
             skincycleLength[5] += 1
-        elif x["skinCycle"] == 4 and x["skincareTime"] == 1 and skincycleLength[6] == 0:
+        elif x[1] == 4 and x[2] == 1 and skincycleLength[6] == 0:
             skincycleLength[6] += 1
-            mday4.append(x["skincareName"])
-            routineName.append(x["skincareLabel"])
-        elif x["skinCycle"] == 4 and x["skincareTime"] == 1:
-            mday4.append(x["skincareName"])
+            mday4.append(x[5])
+            routineName.append(x[4])
+        elif x[1] == 4 and x[2] == 1:
+            mday4.append(x[5])
             skincycleLength[6] += 1
-        elif x["skinCycle"] == 4 and x["skincareTime"] == 2:
-            nday4.append(x["skincareName"])
+        elif x[1] == 4 and x[2] == 2:
+            nday4.append(x[5])
             skincycleLength[7] += 1
 
     # if len(getSkincycle) == 0:
@@ -231,35 +231,35 @@ def editSkincycle():
     i = 0
     con.execute("DELETE FROM skincareRoutine WHERE user_id = ?", (session["user_id"],))
     for name in mday1:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 1, 1, i, label1, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 1, 1, i, label1, name))
         i += 1
     i = 0
     for name in nday1:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 1, 2, i, label1, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 1, 2, i, label1, name))
         i += 1
     i = 0
     for name in mday2:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 2, 1, i, label2, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 2, 1, i, label2, name))
         i += 1
     i = 0
     for name in nday2:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 2, 2, i, label2, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 2, 2, i, label2, name))
         i += 1
     i = 0
     for name in mday3:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 3, 1, i, label3, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 3, 1, i, label3, name))
         i += 1
     i = 0
     for name in nday3:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 3, 2, i, label3, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 3, 2, i, label3, name))
         i += 1
     i = 0
     for name in mday4:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 4, 1, i, label4, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 4, 1, i, label4, name))
         i += 1
     i = 0
     for name in nday4:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 4, 2, i, label4, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 4, 2, i, label4, name))
         i += 1
     i = 0
     con.commit()
@@ -287,31 +287,31 @@ def inputSkincycle():
 
     i = 0
     for name in mday1:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 1, 1, i, label1, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 1, 1, i, label1, name))
         i += 1
     i = 0
     for name in nday1:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 1, 2, i, label1, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 1, 2, i, label1, name))
         i += 1
     i = 0
     for name in mday2:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 2, 1, i, label2, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 2, 1, i, label2, name))
         i += 1
     i = 0
     for name in nday2:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 2, 2, i, label2, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 2, 2, i, label2, name))
         i += 1
     i = 0
     for name in mday3:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 3, 1, i, label3, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 3, 1, i, label3, name))
         i += 1
     i = 0
     for name in nday3:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 3, 2, i, label3, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 3, 2, i, label3, name))
         i += 1
     i = 0
     for name in mday4:
-        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], 4, 1, i, label4, name)
+        con.execute("INSERT INTO skincareRoutine (user_id, skinCycle, skincareTime, skincarePosition, skincareLabel, skincareName) VALUES (?, ?, ?, ?, ?, ?)", (session["user_id"], 4, 1, i, label4, name))
         i += 1
     i = 0
     for name in nday4:
@@ -350,10 +350,10 @@ def inputLogin():
     if len(rows) != 1:
         return make_response(jsonify({"status": "error", "desc": "Email doesn't exist", "status-code": 403}))
 
-    if not check_password_hash(rows[0]["password"], request.form.get("password")):
+    if not check_password_hash(rows[0][3], request.form.get("password")):
         return make_response(jsonify({"status": "error", "desc": "Wrong password", "status-code": 403}))
 
-    session["user_id"] = rows[0]["user_id"]
+    session["user_id"] = rows[0][0]
 
     return make_response(jsonify({"status": "success", "desc": "success", "status-code": 200}))
 
@@ -383,10 +383,10 @@ def inputRegister():
     if len(rows) == 1:
         return make_response(jsonify({"status": "error", "desc": "Email already exist", "status-code": 403}))
 
-    con.execute("INSERT INTO users (email, name, password, registrationDate) VALUES(?, ?, ?, ?)", email, name, passHash, time)
+    con.execute("INSERT INTO users (email, name, password, registrationDate) VALUES(?, ?, ?, ?)", (email, name, passHash, time))
     con.commit()
     
-    cursorRows = con.execute("SELECT * FROM users WHERE email = ?", email)
+    cursorRows = con.execute("SELECT * FROM users WHERE email = ?", (email,))
     rows = cursorRows.fetchall()
     
     acne = request.form.get("acne")
@@ -394,13 +394,13 @@ def inputRegister():
         acneType = 0
     else:
         acneType = request.form.get("acneType")
-    con.execute("INSERT INTO faceCondition (user_id, skinType, acneCondition, acneType, skincareDate) VALUES(?, ?, ?, ?, ?)", rows[0]["user_id"], skinType, acne, acneType, time)
+    con.execute("INSERT INTO faceCondition (user_id, skinType, acneCondition, acneType, skincareDate) VALUES(?, ?, ?, ?, ?)", (rows[0][0], skinType, acne, acneType, time))
     con.commit()
     
-    con.execute("INSERT INTO skincareLog (user_id, dayLog, skincareDateStart) VALUES(?, 0, ?)", rows[0]["user_id"], time)
+    con.execute("INSERT INTO skincareLog (user_id, dayLog, skincareDateStart) VALUES(?, 0, ?)", (rows[0][0], time))
     con.commit()
     
-    session["user_id"] = rows[0]["user_id"]
+    session["user_id"] = rows[0][0]
 
     return make_response(jsonify({"status": "success", "desc": acne, "status-code": 200}))
 
@@ -409,7 +409,7 @@ def inputRegister():
 def skincareGuide():
     cursorRows = con.execute("SELECT * FROM faceCondition WHERE user_id = ?", (session["user_id"],))
     rows = cursorRows.fetchall()
-    return render_template("skincareGuide.html", skinType=rows[0]["skinType"], acneType=rows[0]["acneType"])
+    return render_template("skincareGuide.html", skinType=rows[0][1], acneType=rows[0][3])
 
 @app.post("/log_today")
 @login_required
@@ -420,10 +420,10 @@ def logToday():
     if len(getToday) == 1:
         return make_response(jsonify({"status": "error", "desc": "You already log routine today.", "status-code": 403}))
     else:
-        con.execute("INSERT INTO routineLog (user_id, routineDate) VALUES(?, ?)", session["user_id"], time)
+        con.execute("INSERT INTO routineLog (user_id, routineDate) VALUES(?, ?)", (session["user_id"], time))
         con.commit()
         
-        con.execute("UPDATE skincareLog SET dayLog = dayLog + 1  WHERE user_id = ?", session["user_id"])
+        con.execute("UPDATE skincareLog SET dayLog = dayLog + 1  WHERE user_id = ?", (session["user_id"],))
         con.commit()
         return make_response(jsonify({"status": "success", "desc": "Success log routine for today.", "status-code": 200}))
 
@@ -446,12 +446,12 @@ def history():
     getRoutine = cursorRoutine.fetchall()
     skincycleLabel = []
     for x in getRoutine:
-        skincycleLabel.append(x["skincareLabel"])
+        skincycleLabel.append(x[1])
 
     cursorUser = con.execute("SELECT * FROM skincareLog WHERE user_id = ?", (session["user_id"],))
     getUser = cursorUser.fetchall()
     firstDay = datetime.strptime(getTime(), '%Y-%m-%d').replace(day=1)
-    skincareStart = datetime.strptime(getUser[0]["skincareDateStart"], '%Y-%m-%d')
+    skincareStart = datetime.strptime(getUser[0][2], '%Y-%m-%d')
     #skincareStart erlier than firstDay of the month
     if skincareStart <= firstDay:
         userDay = firstDay - skincareStart
@@ -471,7 +471,7 @@ def history():
                 today = 1
             if len(getLogged) != 0:
                 for logDay in getLogged:
-                    if int(days) == int(logDay['substr(routineDate,9,10)']):
+                    if int(days) == int(logDay[0]):
                         logged = 1
             routines = (dayLog + count) % 4
             if len(skincycleLabel) == 0:
@@ -533,14 +533,14 @@ def inputAccount():
         if len(emailCheck) == 1:
             return make_response(jsonify({"status": "error", "desc": "Email already exist", "status-code": 403}))
 
-    con.execute("UPDATE users SET email = ?, name = ? WHERE user_id = ?", email, name, session["user_id"])
+    con.execute("UPDATE users SET email = ?, name = ? WHERE user_id = ?", (email, name, session["user_id"]))
     con.commit()
     
     if acne == "2":
         acneType = 0
     else:
         acneType = request.form.get("acneType")
-    con.execute("UPDATE faceCondition SET skinType = ?, acneCondition = ?, acneType = ? WHERE user_id = ?", skinType, acne, acneType, session["user_id"])
+    con.execute("UPDATE faceCondition SET skinType = ?, acneCondition = ?, acneType = ? WHERE user_id = ?", (skinType, acne, acneType, session["user_id"]))
     con.commit()
     return make_response(jsonify({"status": "success", "desc": "Saved new account configuration.", "status-code": 200}))
 
