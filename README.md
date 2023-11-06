@@ -1,4 +1,5 @@
 # FaceCare a Skin Cycling Planner
+# Preview website temporary disabled
 
 ![image](https://github.com/suttep/faceCare/assets/82015321/cc69f09e-d03a-47cb-bd14-9330a391e543)
 ![image](https://github.com/suttep/faceCare/assets/82015321/8cec5596-9a01-4b06-acdc-42f2fd3ff5c3)
